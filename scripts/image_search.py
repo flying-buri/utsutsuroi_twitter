@@ -9,7 +9,6 @@ from requests_oauthlib import OAuth1Session
 
 class Search():
     def image_search(self):
-
         #API認証情報
         CK = keys.CK
         CS = keys.CS
@@ -21,18 +20,22 @@ class Search():
         search = "https://api.twitter.com/1.1/search/tweets.json"
 
         # 画像を保存するディレクトリ
-        folder_path = 'folder_path'
+        folder_path = 'images'
         path = os.path.exists(folder_path)
         if not path:
             os.mkdir(folder_path)
+        else:
+            print("dekiteru")
+
 
         # ツイートの取得設定
         num = 1
-        keyword = "#kuwamai"
+        keyword = "#HMキット"
         params = {'q' : keyword, 'count' : num}
         req = twitter.get(search, params = params)
 
         if req.status_code == 200:
+            print("OK")
             # ツイートの画像を取得
             tweets = json.loads(req.content)
             for tweet in tweets['statuses']:
@@ -41,7 +44,6 @@ class Search():
                     media_urls = urls[0]['media_url']
                     downloads = twitter.get(media_urls).content
                     # 画像を保存
-                    folder_path = 'folder_path'
                     file_name = 'file_name.jpg'
                     file_path = folder_path + '/' + file_name
                     images = open(file_path, 'wb')
@@ -49,7 +51,7 @@ class Search():
                     images.close()
 
         else:
-            print "ERROR: %d" % req.status_code
+            print("ERROR: %d" % req.status_code)
 
 if __name__ == '__main__':
     Search().image_search()
