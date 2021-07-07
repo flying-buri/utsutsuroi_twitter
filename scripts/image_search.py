@@ -20,22 +20,19 @@ class Search():
         search = "https://api.twitter.com/1.1/search/tweets.json"
 
         # 画像を保存するディレクトリ
-        folder_path = 'images'
+        folder_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../images")
+        print(folder_path)
         path = os.path.exists(folder_path)
         if not path:
             os.mkdir(folder_path)
-        else:
-            print("dekiteru")
-
 
         # ツイートの取得設定
-        num = 1
+        num = 10
         keyword = "#HMキット"
         params = {'q' : keyword, 'count' : num}
         req = twitter.get(search, params = params)
 
         if req.status_code == 200:
-            print("OK")
             # ツイートの画像を取得
             tweets = json.loads(req.content)
             for tweet in tweets['statuses']:
