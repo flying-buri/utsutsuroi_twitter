@@ -28,24 +28,27 @@ class Search():
 
         # ツイートの取得設定
         num = 10
-        keyword = "#HMキット"
+        keyword = '#VRChatワールド紹介' + ' -filter:retweets'
         params = {'q' : keyword, 'count' : num}
         req = twitter.get(search, params = params)
+        image_num = 0
 
         if req.status_code == 200:
             # ツイートの画像を取得
             tweets = json.loads(req.content)
+            print(tweets)
             for tweet in tweets['statuses']:
                 if 'media' in tweet['entities']:
                     urls = tweet['entities']['media']
                     media_urls = urls[0]['media_url']
                     downloads = twitter.get(media_urls).content
                     # 画像を保存
-                    file_name = 'file_name.jpg'
+                    file_name = '{0:03d}'.format(image_num) + '.jpg'
                     file_path = folder_path + '/' + file_name
                     images = open(file_path, 'wb')
                     images.write(downloads)
                     images.close()
+                    image_num += 1
 
         else:
             print("ERROR: %d" % req.status_code)
